@@ -1,0 +1,15 @@
+name: 'Create Milestone'
+description: 'Create a new milestone with the given title and description'
+branding:
+  icon: 'tag'
+  color: 'orange'
+input:
+  title:
+    description: 'The title (version) for the milestone'
+    required: true
+  description:
+    description: 'An optional description for the milestone'
+    required: false
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
