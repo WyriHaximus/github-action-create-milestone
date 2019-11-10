@@ -32,6 +32,8 @@ else
   > /workdir/payload.json
 fi
 
+cat /workdir/payload.json
+
 curl --request POST \
   --url https://api.github.com/repos/${GITHUB_REPOSITORY}/milestones \
   --header "Authorization: Bearer ${GITHUB_TOKEN}" \
@@ -41,5 +43,7 @@ curl --request POST \
   -s
 
 sleep 3
+
+cat /workdir/response.json
 
 printf "::set-output name=number::%s" $(cat /workdir/response.json | jq .number)
