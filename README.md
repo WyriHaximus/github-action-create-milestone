@@ -2,6 +2,8 @@
 
 Github Action that creates a new open milestone given the title and description.
 
+![Example output showing this action in action](images/output.png)
+
 ## Options
 
 This action supports the following options.
