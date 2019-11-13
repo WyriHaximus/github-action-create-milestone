@@ -28,6 +28,38 @@ An optional description for the milestone.
 This action has only one output and that's the `number` output. This is the number you see in the HTML URL of the 
 milestone and can be used to refer to in other actions when creating PR's as shown in the example below.
 
+## Example
+
+The following example works together with the [`WyriHaximus/github-action-get-previous-tag`](https://github.com/marketplace/actions/get-latest-tag) 
+and [`WyriHaximus/github-action-next-semvers`](https://github.com/marketplace/actions/next-semvers) actions. 
+Where it creates a new milestone based on information passed down from the previous two actions. (This snippet has 
+been taken from the automatic code generation of [`wyrihaximus/fake-php-version`](https://github.com/wyrihaximus/php-fake-php-version/).)
+
+```yaml
+name: Generate
+jobs:
+  generate:
+    steps:
+      - uses: actions/checkout@v1
+      - name: 'Get Previous tag'
+        id: previoustag
+        uses: "WyriHaximus/github-action-get-previous-tag@master"
+        env:
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+      - name: 'Get next minor version'
+        id: semvers
+        uses: "WyriHaximus/github-action-next-semvers@master"
+        with:
+          version: ${{ steps.previoustag.outputs.tag }}
+      - name: 'Create new milestone'
+        id: createmilestone
+        uses: "WyriHaximus/github-action-create-milestone@master"
+        with:
+          title: ${{ steps.semvers.outputs.patch }}
+        env:
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+```
+
 ## License ##
 
 Copyright 2019 [Cees-Jan Kiewiet](http://wyrihaximus.net/)
