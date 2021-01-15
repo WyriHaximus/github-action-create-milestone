@@ -43,17 +43,17 @@ jobs:
       - uses: actions/checkout@v1
       - name: 'Get Previous tag'
         id: previoustag
-        uses: "WyriHaximus/github-action-get-previous-tag@master"
+        uses: "WyriHaximus/github-action-get-previous-tag@v1"
         env:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
       - name: 'Get next minor version'
         id: semvers
-        uses: "WyriHaximus/github-action-next-semvers@master"
+        uses: "WyriHaximus/github-action-next-semvers@v1"
         with:
           version: ${{ steps.previoustag.outputs.tag }}
       - name: 'Create new milestone'
         id: createmilestone
-        uses: "WyriHaximus/github-action-create-milestone@master"
+        uses: "WyriHaximus/github-action-create-milestone@v1"
         with:
           title: ${{ steps.semvers.outputs.patch }}
         env:
