@@ -12,6 +12,9 @@ if [ $(echo ${INPUT_TITLE} | wc -c) -eq 1 ] ; then
   exit 1
 fi
 
+printf "\u001b[30;40m♫♪.ılılıll|̲̅̅●̲̅̅|̲̅̅=̲̅̅|̲̅̅●̲̅̅|%s|̲̅̅●̲̅̅|̲̅̅=̲̅̅|̲̅̅●̲̅̅|llılılı.♫♪\u001b[0m\n" "milestone"
+printf "\u001b[30;40m--------{---(@%s@}}>-----\u001b[0m\n" ${INPUT_TITLE}
+
 if [ $(echo ${INPUT_DESCRIPTION} | wc -c) -gt 1 ] ; then
   jq -nc \
   --arg title ${INPUT_TITLE} \
