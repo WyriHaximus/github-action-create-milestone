@@ -45,4 +45,4 @@ curl --request POST \
 
 sleep 3
 
-printf "::set-output name=number::%s" $(cat /workdir/response.json | jq .number)
+echo $(printf "number=%s" $(cat /workdir/response.json | jq .number)) >> $GITHUB_OUTPUT
