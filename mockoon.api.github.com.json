@@ -1,0 +1,80 @@
+{
+  "uuid": "24fc1370-7bd6-4685-9d05-8e43397958c1",
+  "lastMigration": 32,
+  "name": "Mockoon.api.github.com",
+  "endpointPrefix": "",
+  "latency": 0,
+  "port": 3000,
+  "hostname": "",
+  "folders": [],
+  "routes": [
+    {
+      "uuid": "04bcef8f-cf3e-4fe3-8291-efd54afc3313",
+      "type": "http",
+      "documentation": "",
+      "method": "post",
+      "endpoint": "/repos/WyriHaximus/github-action-create-milestone/milestones",
+      "responses": [
+        {
+          "uuid": "d79b43f7-328e-4436-ad82-34bc4af0bf95",
+          "body": "{\"number\": 1}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null
+    }
+  ],
+  "rootChildren": [
+    {
+      "type": "route",
+      "uuid": "04bcef8f-cf3e-4fe3-8291-efd54afc3313"
+    }
+  ],
+  "proxyMode": false,
+  "proxyHost": "",
+  "proxyRemovePrefix": false,
+  "tlsOptions": {
+    "enabled": false,
+    "type": "CERT",
+    "pfxPath": "",
+    "certPath": "",
+    "keyPath": "",
+    "caPath": "",
+    "passphrase": ""
+  },
+  "cors": true,
+  "headers": [
+    {
+      "key": "Content-Type",
+      "value": "application/json"
+    }
+  ],
+  "proxyReqHeaders": [
+    {
+      "key": "",
+      "value": ""
+    }
+  ],
+  "proxyResHeaders": [
+    {
+      "key": "",
+      "value": ""
+    }
+  ],
+  "data": [],
+  "callbacks": []
+}
