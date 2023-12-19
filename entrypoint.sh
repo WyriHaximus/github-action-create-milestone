@@ -36,7 +36,7 @@ else
 fi
 
 curl --request POST \
-  --url https://api.github.com/repos/${GITHUB_REPOSITORY}/milestones \
+  --url "${GITHUB_API_URL}/repos/${GITHUB_REPOSITORY}/milestones" \
   --header "Authorization: Bearer ${GITHUB_TOKEN}" \
   --header 'Content-Type: application/json' \
   --data "$(cat /workdir/payload.json)" \

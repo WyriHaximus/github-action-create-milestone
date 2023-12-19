@@ -1,0 +1,75 @@
+name: Continuous Integration
+on:
+  push:
+    branches:
+      - 'main'
+      - 'master'
+      - 'refs/heads/v[0-9]+.[0-9]+.[0-9]+'
+  pull_request:
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        title:
+          - "6.0.0"
+          - "6.6.0"
+          - "6.6.6"
+          - "6.6.6@dev"
+          - "6.6.6-ALPHA1"
+          - "6.6.6-BETA2"
+          - "6.6.6-RC3"
+          - "6.6.6 alpha1"
+          - "6.6.6 beta2"
+          - "6.6.6 rc3"
+          - "6.6.6 pre-ALPHA"
+          - "6.6.6 pre ALPHA"
+        description:
+          - "bla bla bla"
+          - "bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla"
+          - ""
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Mockoon CLI
+        uses: mockoon/cli-action@v1
+        with:
+          version: "latest"
+          data-file: "mockoon.api.github.com.json"
+          port: 5000
+      - name: Run Mockoon CLI
+        run: mockoon-cli start --daemon-off --data mockoon.api.github.com.json --log-transaction --port 3000 &
+      - name: Make test call
+        run: docker run --rm -e "GITHUB_API_URL=http://localhost:3000/" -e "GITHUB_REPOSITORY=WyriHaximus/github-action-create-milestone" -e "INPUT_TITLE=${{ matrix.title }}" -e "INPUT_DESCRIPTION=${{ matrix.description }}" -e "GITHUB_TOKEN=nope" -e "GITHUB_OUTPUT=.github.output" --net=host -v $(pwd):$(pwd) -w $(pwd) $(docker build . -q)
+      - name: Read GitHub Output
+        id: githubOutputFile
+        uses: jaywcjlove/github-action-read-file@v1.2.2
+        with:
+          localfile: ./.github.output
+      - name: Assert Version Output
+        uses: nick-fields/assert-action@v1
+        with:
+          expected: "number=1"
+          actual: ${{ steps.githubOutputFile.outputs.content }}
+      - name: Copy Mockoon Logs
+        run: cp ~/.mockoon-cli/logs/mockoon.api.github.com.log mockoon.api.github.com.log
+      - name: Read Mockoon Logs
+        id: mockoonLogs
+        uses: jaywcjlove/github-action-read-file@v1.2.2
+        with:
+          localfile: mockoon.api.github.com.log
+      - name: Assert Request Body (with description)
+        if: matrix.description != ''
+        uses: nick-fields/assert-action@v1
+        with:
+          comparison: contains
+          expected: "{\\\"title\\\":\\\"${{ matrix.title }}\\\",\\\"state\\\":\\\"open\\\",\\\"description\\\":\\\"${{ matrix.description }}\\\"}"
+          actual: ${{ steps.mockoonLogs.outputs.content }}
+      - name: Assert Request Body (without description)
+        if: matrix.description == ''
+        uses: nick-fields/assert-action@v1
+        with:
+          comparison: contains
+          expected: "{\\\"title\\\":\\\"${{ matrix.title }}\\\",\\\"state\\\":\\\"open\\\"}"
+          actual: ${{ steps.mockoonLogs.outputs.content }}
