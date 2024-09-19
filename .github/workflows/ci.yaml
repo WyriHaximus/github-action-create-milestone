@@ -39,7 +39,7 @@ jobs:
           data-file: "mockoon.api.github.com.json"
           port: 5000
       - name: Run Mockoon CLI
-        run: mockoon-cli start --daemon-off --data mockoon.api.github.com.json --log-transaction --port 3000 &
+        run: mockoon-cli start --data mockoon.api.github.com.json --log-transaction --port 3000 &
       - name: Make test call
         run: docker run --rm -e "GITHUB_API_URL=http://localhost:3000/" -e "GITHUB_REPOSITORY=WyriHaximus/github-action-create-milestone" -e "INPUT_TITLE=${{ matrix.title }}" -e "INPUT_DESCRIPTION=${{ matrix.description }}" -e "GITHUB_TOKEN=nope" -e "GITHUB_OUTPUT=.github.output" --net=host -v $(pwd):$(pwd) -w $(pwd) $(docker build . -q)
       - name: Read GitHub Output
